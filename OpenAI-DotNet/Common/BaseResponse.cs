@@ -109,7 +109,7 @@ namespace OpenAI
              *  
              *  Inconsequential compute time
              */
-            Regex tsRegex = new Regex(@"^(?<hour>\d+h)?(?<mins>\d+m)?(?<secs>\d+s)?(?<ms>\d+ms)?");
+            Regex tsRegex = new Regex(@"^(?<hour>\d+h)?(?<mins>\d+m(?!s))?(?<secs>\d+s)?(?<ms>\d+ms)?");
             Match match = tsRegex.Match(timestamp);
             if (!match.Success)
             {
@@ -123,24 +123,25 @@ namespace OpenAI
              *  negative impact for a missing hours segment because the capture groups are flagged as optional.
              */
             int hours = 0;
-            if (match.Groups.ContainsKey("hour"))
+            if (match.Groups["hour"].Captures.Count > 0)
             {
                 hours = int.Parse(match.Groups["hour"].Value.Replace("h", string.Empty));
             }
 
             int minutes = 0;
-            if (match.Groups.ContainsKey("mins"))
+            if (match.Groups["mins"].Captures.Count > 0)
             {
                 minutes = int.Parse(match.Groups["mins"].Value.Replace("m", string.Empty));
             }
 
             int seconds = 0;
-            if (match.Groups.ContainsKey("secs"))
+            if (match.Groups["secs"].Captures.Count > 0)
             {
                 seconds = int.Parse(match.Groups["secs"].Value.Replace("s", string.Empty));
             }
+
             int ms = 0;
-            if (match.Groups.ContainsKey("ms"))
+            if (match.Groups["ms"].Captures.Count > 0)
             {
                 ms = int.Parse(match.Groups["ms"].Value.Replace("ms", string.Empty));
             }
